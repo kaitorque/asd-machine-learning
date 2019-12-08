@@ -131,16 +131,18 @@
 			//Normalizer is for trimming whitespace due to required rule no longer ignore whitespace
 			rules: {
 				tbfile: {
-					 required: true,
-					 normalizer: function(value) {
-							return $.trim(value);
-					 }
+					required: true,
+				  normalizer: function(value) {
+						return $.trim(value);
+					}
 				},
 				trainsize: {
-					 required: true,
-					 normalizer: function(value) {
-							return $.trim(value);
-					 }
+					min: 1,
+					max: 99,
+					required: true,
+					normalizer: function(value) {
+						return $.trim(value);
+					}
 				},
 				"numneuron": {
 					min: 1,
@@ -150,11 +152,11 @@
 					}
 				},
 				maxepoch:{
-					 min: 1,
-					 required: true,
-					 normalizer: function(value) {
-							return $.trim(value);
-					 }
+					min: 1,
+					required: true,
+					normalizer: function(value) {
+						return $.trim(value);
+					}
 				}
 			},
 			invalidHandler: function(event, validator) {

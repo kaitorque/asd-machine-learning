@@ -7,6 +7,7 @@ from collections import namedtuple
 from django.db import connection
 from urllib.parse import parse_qs
 from django.core.files.storage import default_storage
+from asd_ml.model import *
 
 now = timezone.now()
 cursor = connection.cursor()
@@ -68,6 +69,7 @@ def model(request):
                 cursor.execute(insertstr, paramarr);
                 csv_file = request.FILES["tbfile"]
                 csv_file_name = default_storage.save("ml_web/static/file/"+str(lastid)+".csv", csv_file)
+                createModel(lastid, trainsize, maxepoch, numneuron)
                 return JsonResponse({"success": True, "response": "Data Set & Model successfully added!"})
         else:
             errorMsg.append("Request Error")

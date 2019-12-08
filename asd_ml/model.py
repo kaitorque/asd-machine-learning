@@ -7,116 +7,117 @@ import pydoc
 from ann_visualizer.visualize import ann_viz
 from keras.models import model_from_json
 
+def createModel(id, trainsize, maxepoch, neuronarr):
+    trainsize_f = int(trainsize) / 100
+    # #Read Data
+    # data = pd.read_csv("D:\Life\DEGREE\SEM 4\ISP560\PROJECT\Example\data\ASD.csv")
+    # print(data.head())
+    #
+    # #Description
+    # n_records = len(data.index)
+    # n_asd_yes = len(data[data["Class/ASD"] == "YES"])
+    # n_asd_no = len(data[data["Class/ASD"] == "NO"])
+    # yes_percent = float(n_asd_yes / n_records) * 100
+    # no_percent = float(n_asd_no / n_records) * 100
+    #
+    # print(f"Total Number of Records {n_records}")
+    # print(f"Individuals Diagonised with ASD: {n_asd_yes}")
+    # print(f"Individuals Not Diagonised with ASD: {n_asd_no}")
+    # print(f"Percentage of individuals Diagonised with ASD: {yes_percent}")
+    # print(f"Percentage of individuals not Diagonised with ASD: {no_percent}")
 
+    #Prepare Data
 
+    data = pd.read_csv("ml_web/static/file/"+str(id)+".csv", na_values=['?'])
+    # print(data.head())
+    # print(data.describe())
 
-# #Read Data
-# data = pd.read_csv("D:\Life\DEGREE\SEM 4\ISP560\PROJECT\Example\data\ASD.csv")
-# print(data.head())
-#
-# #Description
-# n_records = len(data.index)
-# n_asd_yes = len(data[data["Class/ASD"] == "YES"])
-# n_asd_no = len(data[data["Class/ASD"] == "NO"])
-# yes_percent = float(n_asd_yes / n_records) * 100
-# no_percent = float(n_asd_no / n_records) * 100
-#
-# print(f"Total Number of Records {n_records}")
-# print(f"Individuals Diagonised with ASD: {n_asd_yes}")
-# print(f"Individuals Not Diagonised with ASD: {n_asd_no}")
-# print(f"Percentage of individuals Diagonised with ASD: {yes_percent}")
-# print(f"Percentage of individuals not Diagonised with ASD: {no_percent}")
+    #Clean Dataset
 
-#Prepare Data
+    # drop unwanted columns
+    data = data.drop(['relation','used_app_before','ethnicity', 'age_desc','contry_of_res'], axis=1)
+    # print(data.head())
+    # print(data.loc[(data['result'].isnull()) | (data['age'].isnull()) |(data['gender'].isnull()) |(data['jundice'].isnull())|(data['austim'].isnull())])
+    # data.dropna(inplace=True)
 
-data = pd.read_csv("D:\Life\DEGREE\SEM 4\GITHUB\Degree-SEM-4\ISP560\PROJECT\Example\data\ASD.csv", na_values=['?'])
-# print(data.head())
-# print(data.describe())
+    # print(data.dtypes)
+    asd_output = data["Class/ASD"]
 
-#Clean Dataset
+    features_raw = data[['A1_Score','A2_Score','A3_Score','A4_Score','A5_Score','A6_Score','A7_Score','A8_Score',
+                          'A9_Score','A10_Score','age', 'gender', 'jundice', 'austim', 'result',
+                          ]]
+    # print(asd_output.head())
+    # print(features_raw.head())
 
-# drop unwanted columns
-data = data.drop(['relation','used_app_before','ethnicity', 'age_desc','contry_of_res'], axis=1)
-# print(data.head())
-# print(data.loc[(data['result'].isnull()) | (data['age'].isnull()) |(data['gender'].isnull()) |(data['jundice'].isnull())|(data['austim'].isnull())])
-# data.dropna(inplace=True)
+    #One-Hot Encode (Categorical Data)
+    features_final = pd.get_dummies(features_raw)
+    # print(features_final)
+    asd_class = asd_output.apply(lambda x: 1 if x == "YES" else 0)
+    # print(f"Total Features after one-hot encoding :  {len(list(features_final.columns))}")
+    # print(f"Encoded : {list(features_final.columns)}")
 
-# print(data.dtypes)
-asd_output = data["Class/ASD"]
+    #Split and Shuffle
+    from sklearn import model_selection
+    np.random.seed(1234)
 
-features_raw = data[['A1_Score','A2_Score','A3_Score','A4_Score','A5_Score','A6_Score','A7_Score','A8_Score',
-                      'A9_Score','A10_Score','age', 'gender', 'jundice', 'austim', 'result',
-                      ]]
-# print(asd_output.head())
-# print(features_raw.head())
+    X_train, X_test, Y_train, Y_test = model_selection.train_test_split(features_final,asd_class,train_size=trainsize_f,random_state=1)
+    # print(f"X_Train : {X_train.shape}")
+    # print(f"X_test : {X_test.shape}")
+    # print(f"Y_train : {Y_train.shape}")
+    # print(f"Y_test : {Y_test.shape}")
+    # print(f"Training set has {X_train.shape[0]} samples")
+    # print(f"Testing set has {X_test.shape[0]} samples")
+    # print(f"X_Train : {X_train}")
+    # print(f"X_test : {X_test['age']}")
+    # print(f"X_test : {X_test['result']}")
+    # print(f"X_test : {X_test['gender_f']}")
+    # print(f"X_test : {X_test['age']}")
+    # # print(f"Y_train : {Y_train}")
+    # # print(f"Y_test : {Y_test}")
 
-#One-Hot Encode (Categorical Data)
-features_final = pd.get_dummies(features_raw)
-# print(features_final)
-asd_class = asd_output.apply(lambda x: 1 if x == "YES" else 0)
-# print(f"Total Features after one-hot encoding :  {len(list(features_final.columns))}")
-# print(f"Encoded : {list(features_final.columns)}")
+    #Models
 
-#Split and Shuffle
-from sklearn import model_selection
-np.random.seed(1234)
+    import keras
+    from keras.models import Sequential
+    from keras.layers import Dense, Dropout, Activation
 
-X_train, X_test, Y_train, Y_test = model_selection.train_test_split(features_final,asd_class,train_size=0.80,random_state=1)
-# print(f"X_Train : {X_train.shape}")
-# print(f"X_test : {X_test.shape}")
-# print(f"Y_train : {Y_train.shape}")
-# print(f"Y_test : {Y_test.shape}")
-# print(f"Training set has {X_train.shape[0]} samples")
-# print(f"Testing set has {X_test.shape[0]} samples")
-# print(f"X_Train : {X_train}")
-# print(f"X_test : {X_test['age']}")
-# print(f"X_test : {X_test['result']}")
-# print(f"X_test : {X_test['gender_f']}")
-# print(f"X_test : {X_test['age']}")
-# # print(f"Y_train : {Y_train}")
-# # print(f"Y_test : {Y_test}")
+    np.random.seed(42)
 
-#Models
+    model = Sequential()
 
-import keras
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation
+    model.add(Dense(int(neuronarr[0]), input_dim=18, kernel_initializer='normal', activation='relu'))
+    for x in neuronarr[1:]:
+        model.add(Dense(int(x), kernel_initializer='normal', activation='relu'))
+    model.add(Dense(1, activation='sigmoid'))
 
-np.random.seed(42)
+    model.summary()
 
-model = Sequential()
-model.add(Dense(8, input_dim=18, kernel_initializer='normal', activation='relu'))
-model.add(Dense(4, kernel_initializer='normal', activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
+    from keras.optimizers import Adam
+    adam = Adam(lr=0.001)
+    model.compile(loss='binary_crossentropy',
+                  optimizer=adam,
+                  metrics=['accuracy'])
 
-model.summary()
+    #Running and evaluation the model
+    hist = model.fit(X_train, Y_train,
+              batch_size=16,
+              epochs=int(maxepoch),
+              validation_data=(X_test, Y_test),
+              verbose=2)
 
-from keras.optimizers import Adam
-adam = Adam(lr=0.001)
-model.compile(loss='binary_crossentropy',
-              optimizer=adam,
-              metrics=['accuracy'])
+    # # Evaluating the model on the training and testing set
+    # score = model.evaluate(X_train, Y_train)
+    # print("\n Training Accuracy:", score)
+    #
+    # score = model.evaluate(X_test, Y_test, verbose=0)
+    # print("\n Testing accuracy: ", score)
 
-#Running and evaluation the model
-hist = model.fit(X_train, Y_train,
-          batch_size=16,
-          epochs=100,
-          validation_data=(X_test, Y_test),
-          verbose=2)
-
-# # Evaluating the model on the training and testing set
-# score = model.evaluate(X_train, Y_train)
-# print("\n Training Accuracy:", score)
-#
-# score = model.evaluate(X_test, Y_test, verbose=0)
-# print("\n Testing accuracy: ", score)
-
-# #-----MODEL TO SAVE------
-# model_json = model.to_json()
-# with open("model.json", "w") as json_file:
-#     json_file.write(model_json)
-# #WEIGHTS
-# model.save_weights("model.h5")
+    # #-----MODEL TO SAVE------
+    model_json = model.to_json()
+    with open("ml_web/static/file/"+id+".json", "w") as json_file:
+        json_file.write(model_json)
+    #WEIGHTS
+    model.save_weights("ml_web/static/file/"+id+".h5")
 
 # #----MODEL TO LOAD--------
 # json_file = open("model.json", "r")
