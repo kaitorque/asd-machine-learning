@@ -1,0 +1,677 @@
+{% extends "../layout/base.html" %}
+
+{% block title %}Quantum | Evaluate{% endblock %}
+{% load static %}
+{% block docpluginstyle %}
+<link href="{% static '/vendors/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block docstyle %}
+{% endblock %}
+
+{% block pagetitle %}Evaluate Model{% endblock %}
+
+{% block content %}
+<div class="m-portlet m-portlet--tab">
+	<div class="m-portlet__head">
+		<div class="m-portlet__head-caption">
+			<div class="m-portlet__head-title">
+				<span class="m-portlet__head-icon m--hide">
+					<i class="la la-gear"></i>
+				</span>
+				<h3 class="m-portlet__head-text">
+					From File
+				</h3>
+			</div>
+		</div>
+	</div>
+  <!--begin::Form-->
+	<form id="fileevaluateform" class="m-form m-form--fit m-form--label-align-right">
+		<input type="hidden" name="step" value="evaluate">
+    {% csrf_token %}
+		<div class="m-portlet__body">
+			<div class="form-group m-form__group">
+				<label>Evaluate Set</label>
+				<div class="file-loading">
+					<input type="file" id="tbfile" name="tbfile">
+				</div>
+				<div id="kartik-file-errors"></div>
+			</div>
+		</div>
+		<div class="m-portlet__foot m-portlet__foot--fit">
+			<div class="m-form__actions">
+				<button type="submit" class="btn btn-primary btn-submit">Submit</button>
+				<button type="reset" class="btn btn-secondary">Cancel</button>
+			</div>
+		</div>
+	</form>
+	<!--end::Form-->
+</div>
+<div class="m-portlet m-portlet--tab">
+	<div class="m-portlet__head">
+		<div class="m-portlet__head-caption">
+			<div class="m-portlet__head-title">
+				<span class="m-portlet__head-icon m--hide">
+					<i class="la la-gear"></i>
+				</span>
+				<h3 class="m-portlet__head-text">
+					Questionaire
+				</h3>
+			</div>
+		</div>
+	</div>
+  <!--begin::Form-->
+	<form id="evaluateform" class="m-form m-form--fit m-form--label-align-right">
+		<input type="hidden" name="step" value="qevaluate">
+    {% csrf_token %}
+		<div class="m-portlet__body">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Question 1</label>
+            <div class="row">
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q1" value="1">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Yes
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q1" value="0">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										No
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    				</div>
+    			</div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Question 2</label>
+            <div class="row">
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q2" value="1">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Yes
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q2" value="0">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										No
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    				</div>
+    			</div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Question 3</label>
+            <div class="row">
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q3" value="1">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Yes
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q3" value="0">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										No
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    				</div>
+    			</div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Question 4</label>
+            <div class="row">
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q4" value="1">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Yes
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q4" value="0">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										No
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    				</div>
+    			</div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Question 5</label>
+            <div class="row">
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q5" value="1">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Yes
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q5" value="0">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										No
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    				</div>
+    			</div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Question 6</label>
+            <div class="row">
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q6" value="1">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Yes
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q6" value="0">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										No
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    				</div>
+    			</div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Question 7</label>
+            <div class="row">
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q7" value="1">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Yes
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q7" value="0">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										No
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    				</div>
+    			</div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Question 8</label>
+            <div class="row">
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q8" value="1">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Yes
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q8" value="0">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										No
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    				</div>
+    			</div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Question 9</label>
+            <div class="row">
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q9" value="1">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Yes
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q9" value="0">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										No
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    				</div>
+    			</div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Question 10</label>
+            <div class="row">
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q10" value="1">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Yes
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="q10" value="0">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										No
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    				</div>
+    			</div>
+        </div>
+      </div>
+
+		</div>
+		<div class="m-portlet__foot m-portlet__foot--fit">
+			<div class="m-form__actions">
+				<button type="submit" class="btn btn-primary btn-submit">Submit</button>
+				<button type="reset" class="btn btn-secondary">Cancel</button>
+			</div>
+		</div>
+	</form>
+	<!--end::Form-->
+</div>
+{% endblock %}
+
+{% block docpluginscript %}
+<script src="{% static 'vendors/kartik-v-bootstrap-fileinput/js/fileinput.min.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+{% block docscript %}
+{% endblock %}
+
+{% block docready %}
+<script>
+  $(document).ready(function(){
+		//Set header to csrf token
+    $.ajaxSetup({
+      headers: { "X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').val() }
+    });
+
+		$("#tbfile").fileinput({
+			showPreview: false,
+			showUpload: false,
+			elErrorContainer: '#kartik-file-errors',
+			// maxFileSize: 10240,
+			allowedFileExtensions: ["csv"]
+			//uploadUrl: '/site/file-upload-single'
+		});
+
+		$("#fileevaluateform").validate({
+			//Normalizer is for trimming whitespace due to required rule no longer ignore whitespace
+			rules: {
+				tbfile: {
+					required: true,
+				  normalizer: function(value) {
+						return $.trim(value);
+					}
+				}
+			},
+			invalidHandler: function(event, validator) {
+				swal({
+					title:"",
+					text:"There are some errors in your form. Please correct them.",
+					type:"error",
+					confirmButtonClass:"btn btn-secondary m-btn m-btn--wide"
+				});
+			 },
+			submitHandler: function(form) {
+				//For spinner animation and disabled button
+				$(form).find(".btn-submit").addClass("m-loader m-loader--success m-loader--right").prop("disabled", true);
+				submitForm(form);
+				//Prevent form submit
+				return false;
+			}
+		});
+
+		function submitForm(form)
+		{
+			var formData = new FormData($(form)[0]);
+			$.ajax({
+				type:'Post',
+				url:"{% url "evaluate" %}",
+				data: formData,
+				processData: false,
+				contentType: false,
+				dataType: "json",
+				success: function(data) {
+					if(data.success)
+					{
+						swal({
+							title:"",
+							text:data.response,
+							type:"success",
+							confirmButtonClass:"btn btn-secondary m-btn m-btn--wide"
+						}).then((result) => {
+							//if user click ok, it will redirect the user
+							if (result.value) {
+								// window.location.href=("{% url "home" %}");
+							}
+						});
+						$(form).find(".btn-submit").removeClass("m-loader m-loader--success m-loader--right").prop("disabled", false);
+					}
+					else
+					{
+						swal({
+							title:"",
+							//Only display first error return by the array
+							text:data.response[0],
+							type:"error",
+							confirmButtonClass:"btn btn-secondary m-btn m-btn--wide"
+						});
+						//Stop spinner and disabled on button
+						$(form).find(".btn-submit").removeClass("m-loader m-loader--success m-loader--right").prop("disabled", false);
+					}
+				},
+				error: function(jqXHR, exception){
+						swal({
+							title:"",
+							text:"Error Code: "+jqXHR.status+"-"+jqXHR.statusText,
+							type:"error",
+							confirmButtonClass:"btn btn-secondary m-btn m-btn--wide"
+						});
+						$(form).find(".btn-submit").removeClass("m-loader m-loader--success m-loader--right").prop("disabled", false);
+					}
+			});
+		}
+
+  });
+</script>
+{% endblock %}

@@ -18,8 +18,36 @@ def empty(request):
     return render(request, 'html/empty.html', { "currentTime": now, "page": page })
 
 def home(request):
-    page = { "title": "empty", "sub": "" }
-    return render(request, 'html/empty.html', { "currentTime": now, "page": page })
+    page = { "title": "home", "sub": "" }
+    if request.method == 'GET':
+        if 'step' in request.GET and request.GET['step'] == "modeltable":
+            cursor.execute("SELECT m.id, m.filename, trainsize, maxepoch, group_concat(l.numneuron) neuron_layer FROM model m "
+            "INNER JOIN layer l ON m.id = l.model_id "
+            "GROUP BY m.id")
+            datax = dictfetchall(cursor)
+            datay = list(map(cLink , datax))
+            return JsonResponse({"data": datay })
+        else:
+            return render(request, 'html/home.html', { "currentTime": now, "page": page })
+    elif request.method == 'POST':
+        #Declare array of errorMsg
+        errorMsg = []
+        if request.POST['step'] == "delete":
+            delid = parse_qs(decrypt(request.POST['delid']))
+            cursor.execute("DELETE FROM model WHERE id = %s", delid["id"])
+            cursor.execute("DELETE FROM layer WHERE model_id = %s", delid["id"])
+            default_storage.delete("ml_web/static/file/"+str(delid["id"][0])+".csv");
+            default_storage.delete("ml_web/static/file/"+str(delid["id"][0])+".h5");
+            default_storage.delete("ml_web/static/file/"+str(delid["id"][0])+".json");
+            if cursor.rowcount > 0:
+                response = "Model record successfully deleted!"
+            else:
+                response = "No change detected. No record updated!"
+            return JsonResponse({"success": True, "response": response})
+        else:
+            errorMsg.append("Request Error")
+        return JsonResponse({"success": False, "response": errorMsg})
+
 
 def model(request):
     page = { "title": "model", "sub": "" }
@@ -73,4 +101,19 @@ def model(request):
                 return JsonResponse({"success": True, "response": "Data Set & Model successfully added!"})
         else:
             errorMsg.append("Request Error")
+        return JsonResponse({"success": False, "response": errorMsg})
+
+def evaluate(request):
+    page = { "title": "home", "sub": "" }
+    if request.method == 'GET':
+        delid = parse_qs(decrypt(request.GET['q']))
+        # cursor.execute("SELECT * FROM model WHERE id = %s", delid["id"])
+        # datax = dictfetchone(cursor)
+        # fuzzy = fuzzy_calc(datax)
+        # cursor.execute("UPDATE client SET coping_level = %s WHERE id = %s", [fuzzy['coping'], datax["id"]])
+        # link = "cog/"+str(datax["id"])+".png"
+        return render(request, 'html/evaluate.html', { "currentTime": now, "page": page })
+    else:
+        errorMsg = []
+        errorMsg.append("Request Error")
         return JsonResponse({"success": False, "response": errorMsg})

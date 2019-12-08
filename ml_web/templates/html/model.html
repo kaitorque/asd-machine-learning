@@ -1,6 +1,6 @@
 {% extends "../layout/base.html" %}
 
-{% block title %}ML Model{% endblock %}
+{% block title %}Quantum | ML Model{% endblock %}
 {% load static %}
 {% block docpluginstyle %}
 <link href="{% static '/vendors/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}" rel="stylesheet" type="text/css" />
@@ -13,67 +13,67 @@
 
 {% block content %}
 <!--begin::Portlet-->
-								<div class="m-portlet m-portlet--tab">
-									<div class="m-portlet__head">
-										<div class="m-portlet__head-caption">
-											<div class="m-portlet__head-title">
-												<span class="m-portlet__head-icon m--hide">
-													<i class="la la-gear"></i>
-												</span>
-												<h3 class="m-portlet__head-text">
-													Model Training
-												</h3>
-											</div>
-										</div>
-									</div>
+<div class="m-portlet m-portlet--tab">
+	<div class="m-portlet__head">
+		<div class="m-portlet__head-caption">
+			<div class="m-portlet__head-title">
+				<span class="m-portlet__head-icon m--hide">
+					<i class="la la-gear"></i>
+				</span>
+				<h3 class="m-portlet__head-text">
+					Model Training
+				</h3>
+			</div>
+		</div>
+	</div>
 
-									<!--begin::Form-->
-									<form id="modelform" class="m-form m-form--fit m-form--label-align-right">
-										<input type="hidden" name="step" value="add">
-				            {% csrf_token %}
-										<div class="m-portlet__body">
-											<div class="form-group m-form__group">
-												<label>Training Set</label>
-												<div class="file-loading">
-													<input type="file" id="tbfile" name="tbfile">
-												</div>
-												<div id="kartik-file-errors"></div>
-											</div>
-											<div class="form-group m-form__group">
-												<label>Training Size</label>
-				    						<input type="text" class="form-control m-input m-input--square" name="trainsize" placeholder="Enter Training Size">
-				    					</div>
-											<div class="form-group m-form__group" id="neutronlayer">
-												<label>Number of Neuron</label>
-												<div class="input-group">
-													<input type="text" class="form-control m-input m-input--square" name="numneuron" placeholder="Enter Number of Neuron [Layer 1]">
-													<div class="input-group-append">
-														<button class="btn btn-info btn-add" type="button">
-															<span>
-																<i class="fa fa-plus"></i>
-																<span></span>
-															</span>
-														</button>
-													</div>
-												</div>
-				    					</div>
-											<div class="form-group m-form__group">
-												<label>Maximum Epoch</label>
-				    						<input type="text" class="form-control m-input m-input--square" name="maxepoch" placeholder="Enter Maximum Epoch">
-				    					</div>
-										</div>
-										<div class="m-portlet__foot m-portlet__foot--fit">
-											<div class="m-form__actions">
-												<button type="submit" class="btn btn-primary">Submit</button>
-												<button type="reset" class="btn btn-secondary">Cancel</button>
-											</div>
-										</div>
-									</form>
+	<!--begin::Form-->
+	<form id="modelform" class="m-form m-form--fit m-form--label-align-right">
+		<input type="hidden" name="step" value="add">
+    {% csrf_token %}
+		<div class="m-portlet__body">
+			<div class="form-group m-form__group">
+				<label>Training Set</label>
+				<div class="file-loading">
+					<input type="file" id="tbfile" name="tbfile">
+				</div>
+				<div id="kartik-file-errors"></div>
+			</div>
+			<div class="form-group m-form__group">
+				<label>Training Size</label>
+				<input type="text" class="form-control m-input m-input--square" name="trainsize" placeholder="Enter Training Size">
+			</div>
+			<div class="form-group m-form__group" id="neutronlayer">
+				<label>Number of Neuron</label>
+				<div class="input-group">
+					<input type="text" class="form-control m-input m-input--square" name="numneuron" placeholder="Enter Number of Neuron [Layer 1]">
+					<div class="input-group-append">
+						<button class="btn btn-info btn-add" type="button">
+							<span>
+								<i class="fa fa-plus"></i>
+								<span></span>
+							</span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="form-group m-form__group">
+				<label>Maximum Epoch</label>
+				<input type="text" class="form-control m-input m-input--square" name="maxepoch" placeholder="Enter Maximum Epoch">
+			</div>
+		</div>
+		<div class="m-portlet__foot m-portlet__foot--fit">
+			<div class="m-form__actions">
+				<button type="submit" class="btn btn-primary btn-submit">Submit</button>
+				<button type="reset" class="btn btn-secondary">Cancel</button>
+			</div>
+		</div>
+	</form>
 
-									<!--end::Form-->
-								</div>
+	<!--end::Form-->
+</div>
 
-								<!--end::Portlet-->
+<!--end::Portlet-->
 {% endblock %}
 
 {% block docpluginscript %}
@@ -197,7 +197,7 @@
 						}).then((result) => {
 							//if user click ok, it will redirect the user
 							if (result.value) {
-								// window.location.href=("{% url "model" %}");
+								window.location.href=("{% url "home" %}");
 							}
 						});
 						$(form).find(".btn-submit").removeClass("m-loader m-loader--success m-loader--right").prop("disabled", false);

@@ -114,5 +114,8 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
 asd_ml/settings.py
 *.csv
+*.h5
+*.json

@@ -1,11 +1,15 @@
 import numpy as np
 import pandas as pd
-from time import time
 import matplotlib.pyplot as plt
-from keras.utils import plot_model
+import keras
+from time import time
+from tensorflow.keras.utils import plot_model
 import pydoc
 from ann_visualizer.visualize import ann_viz
-from keras.models import model_from_json
+from tensorflow.keras.models import model_from_json,Sequential
+from tensorflow.keras.layers import Dense, Dropout, Activation
+from tensorflow.keras.optimizers import Adam
+from sklearn import model_selection
 
 def createModel(id, trainsize, maxepoch, neuronarr):
     trainsize_f = int(trainsize) / 100
@@ -57,7 +61,7 @@ def createModel(id, trainsize, maxepoch, neuronarr):
     # print(f"Encoded : {list(features_final.columns)}")
 
     #Split and Shuffle
-    from sklearn import model_selection
+
     np.random.seed(1234)
 
     X_train, X_test, Y_train, Y_test = model_selection.train_test_split(features_final,asd_class,train_size=trainsize_f,random_state=1)
@@ -77,22 +81,21 @@ def createModel(id, trainsize, maxepoch, neuronarr):
 
     #Models
 
-    import keras
-    from keras.models import Sequential
-    from keras.layers import Dense, Dropout, Activation
 
     np.random.seed(42)
 
     model = Sequential()
 
+    # print(neuronarr[0])
     model.add(Dense(int(neuronarr[0]), input_dim=18, kernel_initializer='normal', activation='relu'))
+    # print(x)
     for x in neuronarr[1:]:
         model.add(Dense(int(x), kernel_initializer='normal', activation='relu'))
     model.add(Dense(1, activation='sigmoid'))
 
     model.summary()
 
-    from keras.optimizers import Adam
+
     adam = Adam(lr=0.001)
     model.compile(loss='binary_crossentropy',
                   optimizer=adam,
@@ -114,18 +117,19 @@ def createModel(id, trainsize, maxepoch, neuronarr):
 
     # #-----MODEL TO SAVE------
     model_json = model.to_json()
-    with open("ml_web/static/file/"+id+".json", "w") as json_file:
+    with open("ml_web/static/file/"+str(id)+".json", "w") as json_file:
         json_file.write(model_json)
     #WEIGHTS
-    model.save_weights("ml_web/static/file/"+id+".h5")
+    model.save_weights("ml_web/static/file/"+str(id)+".h5")
 
-# #----MODEL TO LOAD--------
-# json_file = open("model.json", "r")
-# loaded_model_json = json_file.read()
-# json_file.close()
-# loaded_model = model_from_json(loaded_model_json)
-# #WEIGHTS
-# loaded_model.load_weights("model.h5")
+def loadModel(id):
+    #----MODEL TO LOAD--------
+    json_file = open("ml_web/static/file/"+str(id)+".json", "r")
+    loaded_model_json = json_file.read()
+    json_file.close()
+    loaded_model = model_from_json(loaded_model_json)
+    #WEIGHTS
+    loaded_model.load_weights("ml_web/static/file/"+str(id)+".h5")
 
 
 
