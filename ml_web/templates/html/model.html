@@ -28,7 +28,9 @@
 									</div>
 
 									<!--begin::Form-->
-									<form class="m-form m-form--fit m-form--label-align-right">
+									<form id="modelform" class="m-form m-form--fit m-form--label-align-right">
+										<input type="hidden" name="step" value="add">
+				            {% csrf_token %}
 										<div class="m-portlet__body">
 											<div class="form-group m-form__group">
 												<label>Training Set</label>
@@ -42,9 +44,9 @@
 				    						<input type="text" class="form-control m-input m-input--square" name="trainsize" placeholder="Enter Training Size">
 				    					</div>
 											<div class="form-group m-form__group" id="neutronlayer">
-												<label>Number of Neutron</label>
+												<label>Number of Neuron</label>
 												<div class="input-group">
-													<input type="text" class="form-control m-input m-input--square" name="numneutron[]" placeholder="Enter Number of Neutron [Layer 1]">
+													<input type="text" class="form-control m-input m-input--square" name="numneuron" placeholder="Enter Number of Neuron [Layer 1]">
 													<div class="input-group-append">
 														<button class="btn btn-info btn-add" type="button">
 															<span>
@@ -62,7 +64,7 @@
 										</div>
 										<div class="m-portlet__foot m-portlet__foot--fit">
 											<div class="m-form__actions">
-												<button type="reset" class="btn btn-primary">Submit</button>
+												<button type="submit" class="btn btn-primary">Submit</button>
 												<button type="reset" class="btn btn-secondary">Cancel</button>
 											</div>
 										</div>
@@ -107,7 +109,7 @@
 
 		$("#neutronlayer").on("click", ".btn-add", function(){
 			$("#neutronlayer").append(`<div class="input-group">
-				<input type="text" class="form-control m-input m-input--square" name="numneutron[]" placeholder="Enter Number of Neutron">
+				<input type="text" class="form-control m-input m-input--square" name="numneuron" placeholder="Enter Number of Neuron">
 				<div class="input-group-append">
 					<button class="btn btn-danger btn-del" type="button">
 						<span>
@@ -124,6 +126,104 @@
 			$(this).closest(".input-group").remove();
 			renumberingLayer();
 		});
+
+		$("#modelform").validate({
+			//Normalizer is for trimming whitespace due to required rule no longer ignore whitespace
+			rules: {
+				tbfile: {
+					 required: true,
+					 normalizer: function(value) {
+							return $.trim(value);
+					 }
+				},
+				trainsize: {
+					 required: true,
+					 normalizer: function(value) {
+							return $.trim(value);
+					 }
+				},
+				"numneuron": {
+					min: 1,
+					required: true,
+					normalizer: function(value) {
+						 return $.trim(value);
+					}
+				},
+				maxepoch:{
+					 min: 1,
+					 required: true,
+					 normalizer: function(value) {
+							return $.trim(value);
+					 }
+				}
+			},
+			invalidHandler: function(event, validator) {
+				swal({
+					title:"",
+					text:"There are some errors in your form. Please correct them.",
+					type:"error",
+					confirmButtonClass:"btn btn-secondary m-btn m-btn--wide"
+				});
+			 },
+			submitHandler: function(form) {
+				//For spinner animation and disabled button
+				$(form).find(".btn-submit").addClass("m-loader m-loader--success m-loader--right").prop("disabled", true);
+				submitForm(form);
+				//Prevent form submit
+				return false;
+			}
+		});
+
+		function submitForm(form)
+		{
+			var formData = new FormData($(form)[0]);
+			$.ajax({
+				type:'Post',
+				url:"{% url "model" %}",
+				data: formData,
+				processData: false,
+				contentType: false,
+				dataType: "json",
+				success: function(data) {
+					if(data.success)
+					{
+						swal({
+							title:"",
+							text:data.response,
+							type:"success",
+							confirmButtonClass:"btn btn-secondary m-btn m-btn--wide"
+						}).then((result) => {
+							//if user click ok, it will redirect the user
+							if (result.value) {
+								// window.location.href=("{% url "model" %}");
+							}
+						});
+						$(form).find(".btn-submit").removeClass("m-loader m-loader--success m-loader--right").prop("disabled", false);
+					}
+					else
+					{
+						swal({
+							title:"",
+							//Only display first error return by the array
+							text:data.response[0],
+							type:"error",
+							confirmButtonClass:"btn btn-secondary m-btn m-btn--wide"
+						});
+						//Stop spinner and disabled on button
+						$(form).find(".btn-submit").removeClass("m-loader m-loader--success m-loader--right").prop("disabled", false);
+					}
+				},
+				error: function(jqXHR, exception){
+						swal({
+							title:"",
+							text:"Error Code: "+jqXHR.status+"-"+jqXHR.statusText,
+							type:"error",
+							confirmButtonClass:"btn btn-secondary m-btn m-btn--wide"
+						});
+						$(form).find(".btn-submit").removeClass("m-loader m-loader--success m-loader--right").prop("disabled", false);
+					}
+			});
+		}
 
   });
 </script>
