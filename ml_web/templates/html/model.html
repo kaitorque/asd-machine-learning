@@ -1,0 +1,130 @@
+{% extends "../layout/base.html" %}
+
+{% block title %}ML Model{% endblock %}
+{% load static %}
+{% block docpluginstyle %}
+<link href="{% static '/vendors/kartik-v-bootstrap-fileinput/css/fileinput.min.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block docstyle %}
+{% endblock %}
+
+{% block pagetitle %}Multi-Layer Perceptron Setting{% endblock %}
+
+{% block content %}
+<!--begin::Portlet-->
+								<div class="m-portlet m-portlet--tab">
+									<div class="m-portlet__head">
+										<div class="m-portlet__head-caption">
+											<div class="m-portlet__head-title">
+												<span class="m-portlet__head-icon m--hide">
+													<i class="la la-gear"></i>
+												</span>
+												<h3 class="m-portlet__head-text">
+													Model Training
+												</h3>
+											</div>
+										</div>
+									</div>
+
+									<!--begin::Form-->
+									<form class="m-form m-form--fit m-form--label-align-right">
+										<div class="m-portlet__body">
+											<div class="form-group m-form__group">
+												<label>Training Set</label>
+												<div class="file-loading">
+													<input type="file" id="tbfile" name="tbfile">
+												</div>
+												<div id="kartik-file-errors"></div>
+											</div>
+											<div class="form-group m-form__group">
+												<label>Training Size</label>
+				    						<input type="text" class="form-control m-input m-input--square" name="trainsize" placeholder="Enter Training Size">
+				    					</div>
+											<div class="form-group m-form__group" id="neutronlayer">
+												<label>Number of Neutron</label>
+												<div class="input-group">
+													<input type="text" class="form-control m-input m-input--square" name="numneutron[]" placeholder="Enter Number of Neutron [Layer 1]">
+													<div class="input-group-append">
+														<button class="btn btn-info btn-add" type="button">
+															<span>
+																<i class="fa fa-plus"></i>
+																<span></span>
+															</span>
+														</button>
+													</div>
+												</div>
+				    					</div>
+											<div class="form-group m-form__group">
+												<label>Maximum Epoch</label>
+				    						<input type="text" class="form-control m-input m-input--square" name="maxepoch" placeholder="Enter Maximum Epoch">
+				    					</div>
+										</div>
+										<div class="m-portlet__foot m-portlet__foot--fit">
+											<div class="m-form__actions">
+												<button type="reset" class="btn btn-primary">Submit</button>
+												<button type="reset" class="btn btn-secondary">Cancel</button>
+											</div>
+										</div>
+									</form>
+
+									<!--end::Form-->
+								</div>
+
+								<!--end::Portlet-->
+{% endblock %}
+
+{% block docpluginscript %}
+<script src="{% static 'vendors/kartik-v-bootstrap-fileinput/js/fileinput.min.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+{% block docscript %}
+{% endblock %}
+
+{% block docready %}
+<script>
+  $(document).ready(function(){
+		//Set header to csrf token
+    $.ajaxSetup({
+      headers: { "X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').val() }
+    });
+
+		$("#tbfile").fileinput({
+			showPreview: false,
+			showUpload: false,
+			elErrorContainer: '#kartik-file-errors',
+			// maxFileSize: 10240,
+			allowedFileExtensions: ["csv"]
+			//uploadUrl: '/site/file-upload-single'
+		});
+
+		function renumberingLayer()
+		{
+			$('#neutronlayer').find("input").each(function(i) {
+				 $(this).attr("placeholder", "Enter Number of Neutron [Layer "+(i+1)+"]");
+			});
+		}
+
+		$("#neutronlayer").on("click", ".btn-add", function(){
+			$("#neutronlayer").append(`<div class="input-group">
+				<input type="text" class="form-control m-input m-input--square" name="numneutron[]" placeholder="Enter Number of Neutron">
+				<div class="input-group-append">
+					<button class="btn btn-danger btn-del" type="button">
+						<span>
+							<i class="fa fa-trash"></i>
+							<span></span>
+						</span>
+					</button>
+				</div>
+			</div>`);
+			renumberingLayer();
+		});
+
+		$("#neutronlayer").on("click", ".btn-del", function(){
+			$(this).closest(".input-group").remove();
+			renumberingLayer();
+		});
+
+  });
+</script>
+{% endblock %}

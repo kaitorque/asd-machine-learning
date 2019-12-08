@@ -19,10 +19,6 @@ def home(request):
     page = { "title": "empty", "sub": "" }
     return render(request, 'html/empty.html', { "currentTime": now, "page": page })
 
-def client_form(request):
-    page = { "title": "empty", "sub": "" }
-    return render(request, 'html/empty.html', { "currentTime": now, "page": page })
-
-def list_report(request):
-    page = { "title": "empty", "sub": "" }
-    return render(request, 'html/empty.html', { "currentTime": now, "page": page })
+def model(request):
+    page = { "title": "model", "sub": "" }
+    return render(request, 'html/model.html', { "currentTime": now, "page": page })
