@@ -28,6 +28,7 @@
   <!--begin::Form-->
 	<form id="fileevaluateform" class="m-form m-form--fit m-form--label-align-right">
 		<input type="hidden" name="step" value="evaluate">
+		<input type="hidden" name="id" value="{{ delid }}">
     {% csrf_token %}
 		<div class="m-portlet__body">
 			<div class="form-group m-form__group">
@@ -63,6 +64,7 @@
   <!--begin::Form-->
 	<form id="evaluateform" class="m-form m-form--fit m-form--label-align-right">
 		<input type="hidden" name="step" value="qevaluate">
+		<input type="hidden" name="id" value="{{ delid }}">
     {% csrf_token %}
 		<div class="m-portlet__body">
       <div class="row">
@@ -556,17 +558,191 @@
     				</div>
     			</div>
         </div>
+		  <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Age</label>
+            		<input type="text" class="form-control m-input m-input--square" name="age" placeholder="Enter Age">
+    			</div>
+        </div>
+		  <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Gender</label>
+            <div class="row">
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="gender" value="1">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Male
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="gender" value="0">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Female
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    				</div>
+    			</div>
+        </div>
+		  <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Had Jaundice Before?</label>
+            <div class="row">
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="jaundice" value="1">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Yes
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="jaundice" value="0">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										No
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    				</div>
+    			</div>
+        </div>
+		  <div class="col-lg-6">
+          <div class="form-group m-form__group">
+    				<label>Family Member Has Autism</label>
+            <div class="row">
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="autism" value="1">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										Yes
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    					<div class="col-lg-6">
+    						<label class="m-option">
+    							<span class="m-option__control">
+    								<span class="m-radio m-radio--brand m-radio--check-bold">
+    									<input type="radio" name="autism" value="0">
+    									<span></span>
+    								</span>
+    							</span>
+    							<span class="m-option__label">
+    								<span class="m-option__head">
+    									<span class="m-option__title">
+    										No
+    									</span>
+    									<span class="m-option__focus">
+    									</span>
+    								</span>
+    								<span class="m-option__body">
+    								</span>
+    							</span>
+    						</label>
+    					</div>
+    				</div>
+    			</div>
+        </div>
       </div>
 
 		</div>
 		<div class="m-portlet__foot m-portlet__foot--fit">
 			<div class="m-form__actions">
-				<button type="submit" class="btn btn-primary btn-submit">Submit</button>
+				<button type="button" class="btn btn-primary btn-submit">Submit</button>
 				<button type="reset" class="btn btn-secondary">Cancel</button>
 			</div>
 		</div>
 	</form>
 	<!--end::Form-->
+</div>
+<div class="modal fade" id="outputmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Output Modal</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p class="output-value">
+
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock %}
 
@@ -615,13 +791,13 @@
 			submitHandler: function(form) {
 				//For spinner animation and disabled button
 				$(form).find(".btn-submit").addClass("m-loader m-loader--success m-loader--right").prop("disabled", true);
-				submitForm(form);
+				submitFileForm(form);
 				//Prevent form submit
 				return false;
 			}
 		});
 
-		function submitForm(form)
+		function submitFileForm(form)
 		{
 			var formData = new FormData($(form)[0]);
 			$.ajax({
@@ -634,17 +810,68 @@
 				success: function(data) {
 					if(data.success)
 					{
+						var output = "";
+						for(var i=0; i<data.data.length; i++)
+						{
+							if(data.data[i][0] == 0)
+								output = output+((i+1)+". NO</br>");
+							else
+								output = output+((i+1)+". YES</br>");
+						}
+                 		$("#outputmodal .output-value").html(output);
+                 		$("#outputmodal").modal("show");
+						$(form).find(".btn-submit").removeClass("m-loader m-loader--success m-loader--right").prop("disabled", false);
+					}
+					else
+					{
 						swal({
 							title:"",
-							text:data.response,
-							type:"success",
+							//Only display first error return by the array
+							text:data.response[0],
+							type:"error",
 							confirmButtonClass:"btn btn-secondary m-btn m-btn--wide"
-						}).then((result) => {
-							//if user click ok, it will redirect the user
-							if (result.value) {
-								// window.location.href=("{% url "home" %}");
-							}
 						});
+						//Stop spinner and disabled on button
+						$(form).find(".btn-submit").removeClass("m-loader m-loader--success m-loader--right").prop("disabled", false);
+					}
+				},
+				error: function(jqXHR, exception){
+						swal({
+							title:"",
+							text:"Error Code: "+jqXHR.status+"-"+jqXHR.statusText,
+							type:"error",
+							confirmButtonClass:"btn btn-secondary m-btn m-btn--wide"
+						});
+						$(form).find(".btn-submit").removeClass("m-loader m-loader--success m-loader--right").prop("disabled", false);
+					}
+			});
+		}
+		$("#evaluateform").on("click", ".btn-submit", function(){
+			submitForm($(this).closest("form"));
+		});
+		function submitForm(form)
+		{
+<!--			var formData = new FormData($(form)[0]);-->
+			$.ajax({
+				type:'Post',
+				url:"{% url "evaluate" %}",
+				data: $(form).serialize(),
+<!--				processData: false,-->
+<!--				contentType: false,-->
+				dataType: "json",
+				success: function(data) {
+					if(data.success)
+					{
+						var output = "";
+						for(var i=0; i<data.data.length; i++)
+						{
+							if(data.data[i][0] == 0)
+								output = output+((i+1)+". NO</br>");
+							else
+								output = output+((i+1)+". YES</br>");
+						}
+                 		$("#outputmodal .output-value").html(output);
+                 		$("#outputmodal").modal("show");
 						$(form).find(".btn-submit").removeClass("m-loader m-loader--success m-loader--right").prop("disabled", false);
 					}
 					else

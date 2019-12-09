@@ -3,13 +3,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import keras
 from time import time
-from tensorflow.keras.utils import plot_model
-import pydoc
+#from keras.utils import plot_model
+
 from ann_visualizer.visualize import ann_viz
-from tensorflow.keras.models import model_from_json,Sequential
-from tensorflow.keras.layers import Dense, Dropout, Activation
-from tensorflow.keras.optimizers import Adam
+import tensorflow as tf
 from sklearn import model_selection
+
+import keras.backend.tensorflow_backend as tb
+tb._SYMBOLIC_SCOPE.value = True
 
 def createModel(id, trainsize, maxepoch, neuronarr):
     trainsize_f = int(trainsize) / 100
@@ -42,7 +43,7 @@ def createModel(id, trainsize, maxepoch, neuronarr):
     data = data.drop(['relation','used_app_before','ethnicity', 'age_desc','contry_of_res'], axis=1)
     # print(data.head())
     # print(data.loc[(data['result'].isnull()) | (data['age'].isnull()) |(data['gender'].isnull()) |(data['jundice'].isnull())|(data['austim'].isnull())])
-    # data.dropna(inplace=True)
+    data.dropna(inplace=True)
 
     # print(data.dtypes)
     asd_output = data["Class/ASD"]
@@ -84,22 +85,27 @@ def createModel(id, trainsize, maxepoch, neuronarr):
 
     np.random.seed(42)
 
-    model = Sequential()
+    model = tf.keras.Sequential()
 
     # print(neuronarr[0])
-    model.add(Dense(int(neuronarr[0]), input_dim=18, kernel_initializer='normal', activation='relu'))
+    model.add(tf.keras.layers.Dense(int(neuronarr[0]), input_dim=18, kernel_initializer='normal', activation='relu'))
     # print(x)
     for x in neuronarr[1:]:
-        model.add(Dense(int(x), kernel_initializer='normal', activation='relu'))
-    model.add(Dense(1, activation='sigmoid'))
+        model.add(tf.keras.layers.Dense(int(x), kernel_initializer='normal', activation='relu'))
+    model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
 
     model.summary()
 
 
-    adam = Adam(lr=0.001)
+    adam = tf.keras.optimizers.Adam(lr=0.001)
     model.compile(loss='binary_crossentropy',
                   optimizer=adam,
                   metrics=['accuracy'])
+
+    X_train = np.asarray(X_train)
+    Y_train = np.asarray(Y_train)
+    X_test = np.asarray(X_test)
+    Y_test = np.asarray(Y_test)
 
     #Running and evaluation the model
     hist = model.fit(X_train, Y_train,
@@ -109,11 +115,11 @@ def createModel(id, trainsize, maxepoch, neuronarr):
               verbose=2)
 
     # # Evaluating the model on the training and testing set
-    # score = model.evaluate(X_train, Y_train)
-    # print("\n Training Accuracy:", score)
-    #
-    # score = model.evaluate(X_test, Y_test, verbose=0)
-    # print("\n Testing accuracy: ", score)
+    score1 = model.evaluate(X_train, Y_train)
+    print("\n Training Accuracy:", score1)
+
+    score2 = model.evaluate(X_test, Y_test, verbose=0)
+    print("\n Testing accuracy: ", score2)
 
     # #-----MODEL TO SAVE------
     model_json = model.to_json()
@@ -122,16 +128,86 @@ def createModel(id, trainsize, maxepoch, neuronarr):
     #WEIGHTS
     model.save_weights("ml_web/static/file/"+str(id)+".h5")
 
-def loadModel(id):
+    # #Generate Model
+    # import os
+    # os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin'
+    # # # C:\Program Files (x86)\Graphviz2.38\bin
+    # # C:/Users/Msi/Miniconda3/envs/tensorflow/Library/bin/graphviz
+    # ann_viz(model, title="My first neural network",view=True)
+    return {"training": score1[1], "testing": score2[1]}
+
+def loadModel(id, csv_file):
     #----MODEL TO LOAD--------
     json_file = open("ml_web/static/file/"+str(id)+".json", "r")
     loaded_model_json = json_file.read()
     json_file.close()
-    loaded_model = model_from_json(loaded_model_json)
+    loaded_model = tf.keras.models.model_from_json(loaded_model_json)
     #WEIGHTS
     loaded_model.load_weights("ml_web/static/file/"+str(id)+".h5")
 
+    newData = pd.read_csv(csv_file)
+    # print(newData.shape)
+    predictions = loaded_model.predict_classes(newData)
+    # # pd.DataFrame(X_test).to_csv("test_data.csv", index = None)
+    print(predictions)
+    return predictions.tolist()
 
+def loadModel2(id, input):
+    #----MODEL TO LOAD--------
+    json_file = open("ml_web/static/file/"+str(id)+".json", "r")
+    loaded_model_json = json_file.read()
+    json_file.close()
+    loaded_model = tf.keras.models.model_from_json(loaded_model_json)
+    #WEIGHTS
+    loaded_model.load_weights("ml_web/static/file/"+str(id)+".h5")
+    print(input["q1"])
+    result = int(input["q1"]) + int(input["q2"]) + int(input["q3"]) + int(input["q4"]) + int(input["q5"]) + int(input["q6"]) + int(input["q7"]) + int(input["q8"]) + int(input["q9"]) + int(input["q10"])
+
+    if input["gender"] == 1:
+        gFem = 0
+        gMal = 1
+    else:
+        gFem = 1
+        gMal = 0
+
+    if input["jaundice"] == 1:
+        gJaunYes = 1
+        gJaunNo  = 0
+    else:
+        gJaunYes = 0
+        gJaunNo = 1
+
+    if input["autism"] == 1:
+        gautismy = 1
+        gautismn  = 0
+    else:
+        gautismy = 0
+        gautismn = 1
+
+    newData = {"1": [input["q1"]],
+               "2" : [input["q2"]],
+               "3" : [input["q3"]],
+               "4" : [input["q4"]],
+               "5" : [input["q5"]],
+               "6" : [input["q6"]],
+               "7" : [input["q7"]],
+               "8" : [input["q8"]],
+               "9" : [input["q9"]],
+               "10" : [input["q10"]],
+               "age" : [input["age"]],
+               "result" : [result],
+               "gender_f" : [gFem],
+               "gender_m" : [gMal],
+               "jaundice_n" : [gJaunNo],
+               "jaundine_y" : [gJaunYes],
+               "autism_no" : [gautismn],
+               "autism_yes" : [gautismy]}
+    # print(newData.shape)
+    newData = pd.DataFrame(newData)
+    predictions = loaded_model.predict_classes(newData)
+    # # pd.DataFrame(X_test).to_csv("test_data.csv", index = None)
+    print(predictions)
+    return predictions.tolist()
 
 
 #Generate Image Neural Network
@@ -145,10 +221,6 @@ def loadModel(id):
 # generate classification report using predictions for categorical model
 # from sklearn.metrics import classification_report, accuracy_score
 # print(X_test)
-# newData = pd.read_csv("D:\Life\DEGREE\SEM 4\ISP560\PROJECT\Example\input_data.csv")
-# print(newData.shape)
-# predictions = model.predict_classes(newData)
-# # pd.DataFrame(X_test).to_csv("test_data.csv", index = None)
-# print(predictions)
+#
 # score = model.evaluate(newData, predictions, verbose=0)
 # print("\n Testing accuracy: ", score)
